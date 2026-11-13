@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ДЭ-2027 — проект по теме: все шаги и весь код</title>
+<meta name="description" content="Введите тему — получите полный путь сборки проекта на Laravel по КИМ 09.02.07: команды, код всех файлов, проверки, чек-лист 75 баллов и речь для защиты.">
+<meta name="theme-color" content="#f4f0e6">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<a class="skip" href="#topic">Перейти к полю темы</a>
+
+<header class="masthead">
+    <div class="wrap">
+        <div class="mark">
+            <span class="mark-code">ДЭ-2027</span>
+            <span class="mark-sep" aria-hidden="true"></span>
+            <span class="mark-spec">09.02.07 · КИМ 75 баллов</span>
+        </div>
+
+        <h1>Введите тему — получите<br>весь путь и весь код</h1>
+
+        <p class="lead">
+            От <code>composer create-project</code> до защиты: 11 глав, все команды,
+            полный код 39 файлов, проверки, типичные ошибки, чек-лист на 75 баллов
+            и готовая речь. Ничего не нужно устанавливать — генератор работает прямо в браузере.
+        </p>
+
+        <ul class="facts">
+            <li><b>39</b> файлов с кодом</li>
+            <li><b>11</b> глав по порядку</li>
+            <li><b>4</b> часа на всё</li>
+            <li><b>.md</b> и <b>.zip</b> на выходе</li>
+        </ul>
+    </div>
+</header>
+
+<main class="wrap" id="main">
+
+    <form class="generator" id="generator" novalidate>
+        <div class="field field-topic">
+            <label for="topic">Тема проекта</label>
+            <input
+                id="topic"
+                name="topic"
+                type="text"
+                inputmode="text"
+                autocomplete="off"
+                maxlength="80"
+                placeholder="Например: обмен книгами"
+                aria-describedby="topic-hint"
+                required>
+            <p class="hint" id="topic-hint">
+                Пишите как в задании: «Пицца на районе», «Ремонт часов», «Прокат авто».
+                Словарь сам подберёт объект, статусы, оплату и текст отзыва.
+            </p>
+        </div>
+
+        <div class="examples" role="group" aria-label="Примеры тем">
+            <span class="examples-label">Примеры:</span>
+            <button type="button" class="chip" data-topic="Обмен книгами">Обмен книгами</button>
+            <button type="button" class="chip" data-topic="Пицца на районе">Пицца на районе</button>
+            <button type="button" class="chip" data-topic="Ремонт часов">Ремонт часов</button>
+            <button type="button" class="chip" data-topic="Автосервис">Автосервис</button>
+            <button type="button" class="chip" data-topic="Фитнес-клуб">Фитнес-клуб</button>
+            <button type="button" class="chip" data-topic="Гостиница">Гостиница</button>
+        </div>
+
+        <details class="advanced">
+            <summary>Уточнить детали <span>— необязательно, подставится по теме</span></summary>
+
+            <div class="grid">
+                <div class="field">
+                    <label for="project_name">Название проекта</label>
+                    <input id="project_name" name="project_name" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="purpose">Назначение системы</label>
+                    <input id="purpose" name="purpose" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="object_singular">Объект заявки</label>
+                    <input id="object_singular" name="object_singular" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="object_plural">Объект заявки, мн. ч.</label>
+                    <input id="object_plural" name="object_plural" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field field-wide">
+                    <label for="object_options">Варианты объекта через запятую</label>
+                    <input id="object_options" name="object_options" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="date_label">Подпись даты</label>
+                    <input id="date_label" name="date_label" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="status_new">Первый статус</label>
+                    <input id="status_new" name="status_new" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="status_assigned">Второй статус</label>
+                    <input id="status_assigned" name="status_assigned" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="status_done">Финальный статус</label>
+                    <input id="status_done" name="status_done" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="pay_1">Оплата, вариант 1</label>
+                    <input id="pay_1" name="pay_1" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="pay_2">Оплата, вариант 2</label>
+                    <input id="pay_2" name="pay_2" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field field-wide">
+                    <label for="review_text">Что оценивает отзыв</label>
+                    <input id="review_text" name="review_text" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="admin_login">Логин администратора</label>
+                    <input id="admin_login" name="admin_login" type="text" maxlength="160" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="admin_password">Пароль администратора</label>
+                    <input id="admin_password" name="admin_password" type="text" maxlength="160" autocomplete="off">
+                </div>
+            </div>
+        </details>
+
+        <div class="submit-row">
+            <button type="submit" class="btn btn-primary">Собрать проект</button>
+            <button type="button" class="btn btn-quiet" id="reset">Новая тема</button>
+            <span class="submit-note" id="submit-note">Тема обязательна</span>
+        </div>
+    </form>
+
+    <section class="result" id="result" aria-live="polite" hidden></section>
+
+    <noscript>
+        <p class="section-note">
+            Генератор собирает проект прямо в браузере, поэтому нужен JavaScript.
+            Включите его — или скачайте сборку для Windows по ссылке внизу.
+        </p>
+    </noscript>
+
+    <section class="about" id="about">
+        <h2>Что именно вы получите</h2>
+        <ol class="about-list">
+            <li>
+                <h3>Путь по шагам</h3>
+                <p>11 глав: каркас, база, модели, маршруты, вход, заявки, отзывы, админка, вёрстка, тесты, защита. С временем на каждую.</p>
+            </li>
+            <li>
+                <h3>Код без сокращений</h3>
+                <p>Все 39 файлов целиком: миграции, модели, контроллеры, Blade-шаблоны, CSS, тесты, README. Копируются по кнопке.</p>
+            </li>
+            <li>
+                <h3>Проверки и грабли</h3>
+                <p>После каждой главы — что проверить и какие ошибки чаще всего стоят баллов на демоэкзамене.</p>
+            </li>
+            <li>
+                <h3>Готовые файлы</h3>
+                <p>Инструкция в <code>.md</code> и проект в <code>.zip</code>: распаковать поверх свежего Laravel и запустить.</p>
+            </li>
+        </ol>
+    </section>
+
+</main>
+
+<footer class="foot">
+    <div class="wrap">
+        <p>
+            Генератор повторяет раздел «Проект по теме» из тренажёра ДЭ-2027.
+            Критерии — КИМ 09.02.07-3-2027: 75 баллов, 4 часа, Laravel + SQLite.
+        </p>
+        <p class="foot-links">
+            <a href="https://github.com/ItachqK/de-2027-trainer">Исходный код тренажёра</a>
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/ItachqK/de-2027-trainer/releases/latest">Сборка для Windows</a>
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/ItachqK/tochny-hod">Эталонный проект</a>
+        </p>
+    </div>
+</footer>
+
+<div class="dock" id="dock" hidden>
+    <div class="dock-topic" id="dock-topic"></div>
+    <div class="dock-actions">
+        <button type="button" class="btn btn-primary" id="dock-zip">Скачать .zip</button>
+        <button type="button" class="btn btn-quiet" id="dock-md">.md</button>
+    </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/engine.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
