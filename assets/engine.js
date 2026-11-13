@@ -89,6 +89,84 @@
         return Object.assign({}, D.defaults);
     }
 
+    /* Падежные окончания для коротких ключей — копия Blueprint::ENDINGS. */
+    var ENDINGS = [
+        '', 'а', 'я', 'ы', 'и', 'е', 'у', 'ю', 'о', 'ь', 'й',
+        'ов', 'ев', 'ам', 'ям', 'ах', 'ях', 'ом', 'ем', 'ой', 'ей',
+        'ою', 'ею', 'ий', 'ый', 'ая', 'ое', 'ые', 'ую', 'юю',
+        'ых', 'их', 'ыми', 'ими', 'ии', 'ия', 'ию', 'ья', 'ье', 'ью', 'ьи'
+    ];
+
+    function words(topic) {
+        return topic.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+    }
+
+    /*
+     * Совпадение ключа со словом темы. Возвращает номер слова или null.
+     * Короткие ключи (до 4 букв) — только с начала слова и с падежным
+     * окончанием: «туризм» не должен становиться туром.
+     */
+    function keyHits(key, list, haystack) {
+        var length = key.length;
+
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].indexOf(key) !== 0) {
+                continue;
+            }
+
+            if (length >= 4 || ENDINGS.indexOf(list[i].slice(length)) !== -1) {
+                return i;
+            }
+        }
+
+        if (length < 5) {
+            return null;
+        }
+
+        for (var j = 0; j < list.length; j++) {
+            if (list[j].indexOf(key) !== -1) {
+                return j;
+            }
+        }
+
+        return haystack.indexOf(key) !== -1 ? 0 : null;
+    }
+
+    /* Самый точный пресет: длина ключа + приоритет первого слова темы. */
+    function match(topic) {
+        var haystack = String(topic || '').trim().toLowerCase();
+
+        if (haystack === '') {
+            return null;
+        }
+
+        var list = words(haystack);
+        var best = null;
+        var bestScore = 0;
+
+        for (var i = 0; i < D.presets.length; i++) {
+            var preset = D.presets[i];
+
+            for (var k = 0; k < preset.keys.length; k++) {
+                var key = preset.keys[k].trim().toLowerCase();
+                var index = key === '' ? null : keyHits(key, list, haystack);
+
+                if (index === null) {
+                    continue;
+                }
+
+                var score = key.length + (index === 0 ? 3 : 0);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    best = preset.data;
+                }
+            }
+        }
+
+        return best;
+    }
+
     function derive(topic) {
         topic = String(topic || '').trim();
 
@@ -97,28 +175,9 @@
         }
 
         var data = defaults();
-        var haystack = topic.toLowerCase();
-        var matched = false;
+        var preset = match(topic);
 
-        for (var i = 0; i < D.presets.length; i++) {
-            var preset = D.presets[i];
-
-            for (var k = 0; k < preset.keys.length; k++) {
-                if (haystack.indexOf(preset.keys[k]) !== -1) {
-                    Object.assign(data, preset.data);
-                    matched = true;
-                    break;
-                }
-            }
-
-            if (matched) {
-                break;
-            }
-        }
-
-        if (!matched) {
-            Object.assign(data, D.neutral);
-        }
+        Object.assign(data, preset || D.neutral);
 
         data.topic = topic;
         data.project_name = topic;
