@@ -39,8 +39,11 @@
     }
 
     function slug(value) {
+        // Как Str::slug: пунктуация удаляется, разделителем становятся
+        // только пробелы, дефисы и подчёркивания.
         return ascii(String(value || ''))
-            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/[^a-z0-9\s_-]+/g, '')
+            .replace(/[_\s-]+/g, '-')
             .replace(/^-+|-+$/g, '');
     }
 
@@ -102,11 +105,31 @@
     }
 
     /*
+     * Слова-действия называют операцию, а не предметную область:
+     * «Доставка суши» — это суши, а не грузоперевозки.
+     * Копия Blueprint::WEAK_KEYS.
+     */
+    var WEAK_KEYS = ['доставк', 'выдач', 'прокат'];
+
+    /*
      * Совпадение ключа со словом темы. Возвращает номер слова или null.
      * Короткие ключи (до 4 букв) — только с начала слова и с падежным
      * окончанием: «туризм» не должен становиться туром.
      */
-    function keyHits(key, list, haystack) {
+    function keyHits(key, list) {
+        // Ключ из двух слов: «ремонт квартир», «химчистка мебели».
+        if (key.indexOf(' ') !== -1) {
+            var parts = key.split(/\s+/u);
+
+            for (var p = 0; p < parts.length; p++) {
+                if (!hasWord(parts[p], list)) {
+                    return null;
+                }
+            }
+
+            return 0;
+        }
+
         var length = key.length;
 
         for (var i = 0; i < list.length; i++) {
@@ -129,7 +152,24 @@
             }
         }
 
-        return haystack.indexOf(key) !== -1 ? 0 : null;
+        return null;
+    }
+
+    /* Есть ли в теме слово, которое начинается с этой части ключа. */
+    function hasWord(part, list) {
+        var length = part.length;
+
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].indexOf(part) !== 0) {
+                continue;
+            }
+
+            if (length >= 4 || ENDINGS.indexOf(list[i].slice(length)) !== -1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /* Самый точный пресет: длина ключа + приоритет первого слова темы. */
@@ -149,7 +189,13 @@
 
             for (var k = 0; k < preset.keys.length; k++) {
                 var key = preset.keys[k].trim().toLowerCase();
-                var index = key === '' ? null : keyHits(key, list, haystack);
+
+                // Слово-действие не выбирает предметную область.
+                if (WEAK_KEYS.indexOf(key) !== -1) {
+                    continue;
+                }
+
+                var index = key === '' ? null : keyHits(key, list);
 
                 if (index === null) {
                     continue;
