@@ -98,22 +98,26 @@
 
         var data = defaults();
         var haystack = topic.toLowerCase();
+        var matched = false;
 
         for (var i = 0; i < D.presets.length; i++) {
             var preset = D.presets[i];
-            var hit = false;
 
             for (var k = 0; k < preset.keys.length; k++) {
                 if (haystack.indexOf(preset.keys[k]) !== -1) {
                     Object.assign(data, preset.data);
-                    hit = true;
+                    matched = true;
                     break;
                 }
             }
 
-            if (hit) {
+            if (matched) {
                 break;
             }
+        }
+
+        if (!matched) {
+            Object.assign(data, D.neutral);
         }
 
         data.topic = topic;
