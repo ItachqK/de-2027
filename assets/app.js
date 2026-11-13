@@ -323,9 +323,28 @@
         var copyAll = btn('Скопировать инструкцию', 'btn-quiet');
         copyAll.addEventListener('click', function () { copyText(state.md, copyAll); });
 
+        var share = btn('Поделиться ссылкой', 'btn-quiet');
+        share.addEventListener('click', function () {
+            var url = window.location.href;
+            var payload = {
+                title: 'ДЭ-2027 — проект по теме',
+                text: 'Проект «' + state.data.project_name + '»: шаги, код и архив',
+                url: url
+            };
+
+            if (navigator.share) {
+                navigator.share(payload).catch(function () { /* отменили — не ошибка */ });
+
+                return;
+            }
+
+            copyText(url, share);
+        });
+
         downloads.appendChild(zipButton);
         downloads.appendChild(mdButton);
         downloads.appendChild(copyAll);
+        downloads.appendChild(share);
         sheet.appendChild(downloads);
 
         sheet.appendChild(el('h2', 'section-title', 'План на 4 часа'));
